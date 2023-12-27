@@ -1,0 +1,17 @@
+Hospital Data base 
+
+
+Description
+This project involves creating an SQLlite3 database from CSV files using SQLlite. The database is designed to help a hospital manage all there data and run diffrent quries.
+
+Requirements
+
+SQLlite3
+
+Setup Instructions
+
+Use the following steps to create the database from CSV files:
+Open terminal/command prompt.
+Access the SQLite shell by running: sqlite3 your_database_name.db
+
+Install required Python libraries using pip install -r requirements.txt (if using any).

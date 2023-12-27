@@ -1,0 +1,232 @@
+1 select *
+   ...> from doctors,patients,p_assignment
+   ...> where doctors.D_ID = p_assignment.D_ID AND patients.P_ID = p_assignment.P_ID AND patients.P_NAME = "RICHARD MILLER”;
+
+Results:
+
+000000004,"WILLIAM BROWN",m,44,"Physical medicine and rehabilitation",18,781-045-4121,"Newel Street",Burlington,000001001,"RICHARD MILLER",m,52,Infertility,781-389-9038,"Straight Street",Reading,000001001,000000004
+000000006,"PATRICIA JOHNSON",f,31,"Obstetrics and gynaecology",5,978-930-9517,"Whitney Avenue",Lowell,000001001,"RICHARD MILLER",m,52,Infertility,781-389-9038,"Straight Street”,Reading,000001001,000000006
+
+2 sqlite> select T_RESULT
+   ...> from tests
+   ...> where P_ID in (select substr(P_ID,-4) from patients where P_DISEASE LIKE “%Cancer%");
+
+Results:
+
+Positive
+Negative
+Positive
+
+(Patient ID 1022 is missing in test.)
+
+3
+
+select I_MANUFACTURER
+   ...> from instruments
+   ...> where I_MANUFACTURER Like "S%"
+   ...> ;
+
+Results:
+
+"Stryker Corporation”
+
+4 select * 
+   ...> from doctors
+   ...> where D_YEARS_OF_EXPERIENCE = (select MAX (D_YEARS_OF_EXPERIENCE) from doctors);
+
+Results:
+
+000000006,"PATRICIA JOHNSON",f,31,"Obstetrics and gynaecology",5,978-930-9517,"Whitney Avenue”,Lowell
+
+5 select p.P_NAME
+
+   ...> from doctors d, patients p, p_assignment PA
+   ...> where d.D_ID = PA.D_ID AND p.P_ID = PA.P_ID AND d.D_NAME = "JAMES SMITH" AND d.D_STREET = p.P_STREET AND d.D_CITY = P_CITY;
+
+
+Results:
+
+"BETTY WHITE"
+
+6 Select nurses.N_NAME,COUNT(n_assists.D_ID)
+   ...> from nurses,n_assists
+   ...> where nurses.N_ID=n_assists.N_ID
+   ...> GROUP BY nurses.N_ID
+   ...> HAVING COUNT(n_assists.D_ID) >= 2;
+
+Results:
+"SOLINDA WILLIAMS",3
+"JENNIFER DAVIS",3
+"MARIA MILLER",2
+"MARGARET MOORE",2
+"SANDRA MARTIN",2
+"CAROL GARCIA",2
+"SHARON ROBINSON",2
+"MICHELLE CLARK",3
+
+
+
+
+
+
+
+
+7 select doctors.D_NAME,COUNT(n_assists.N_ID)
+   ...> from doctors,n_assists
+   ...> where n_assists.D_ID = doctors.D_ID
+   ...> GROUP BY doctors.D_ID
+   ...> ORDER BY COUNT(n_assists.N_ID) DESC;
+
+Results:
+
+"PATRICIA JOHNSON",5
+"ELIZABETH BROWN",4
+"WILLIAM BROWN",3
+"MICHAEL JONES",3
+"ROBERT WILLIAMS",3
+"JOHN JOHNSON",3
+"JAMES SMITH",3
+"BARBARA JONES",2
+"LINDA WILLIAMS",2
+"MARY SMITH",2
+
+
+8 select nurses.N_NAME
+   ...> from nurses
+   ...> where nurses.N_ID NOT IN ( select N_ID from n_assists);
+
+
+"MARY SMITH”
+
+9 sqlite> select * 
+   ...> from doctors
+   ...> where D_GENDER = 'female';
+sqlite> update doctors
+   ...> set D_YEARS_OF_EXPERIENCE = D_YEARS_OF_EXPERIENCE + 5
+   ...> where D_GENDER = 'f';
+sqlite> select *
+   ...> from doctors
+   ...> where D_GENDER = ‘f’;
+
+ Results:
+
+Before:
+
+000000005,MARY SMITH,f,36,Internal medicine,10,978-930-3316,Homecrest Avenue,Lowell
+000000006,PATRICIA JOHNSON,f,31,Obstetrics and gynaecology,5,978-930-9517,Whitney Avenue,Lowell
+000000007,LINDA WILLIAMS,f,54,Cardiothoracic anesthesiology,28,978-930-9485,Lee Avenue,Lowell
+000000008,BARBARA JONES,f,45,Neurosurgery,19,617-314-5667,Himrod Street,Woburn
+000000009,ELIZABETH BROWN,f,57,Pediatrics,31,617-314-8264,Lee Avenue,Woburn
+
+After:
+
+000000005,"MARY SMITH",f,36,"Internal medicine",15,978-930-3316,"Homecrest Avenue",Lowell
+000000006,"PATRICIA JOHNSON",f,31,"Obstetrics and gynaecology",10,978-930-9517,"Whitney Avenue",Lowell
+000000007,"LINDA WILLIAMS",f,54,"Cardiothoracic anesthesiology",33,978-930-9485,"Lee Avenue",Lowell
+000000008,"BARBARA JONES",f,45,Neurosurgery,24,617-314-5667,"Himrod Street",Woburn
+000000009,"ELIZABETH BROWN",f,57,Pediatrics,36,617-314-8264,"Lee Avenue",Woburn
+
+
+10 
+	sqlite> Delete from tests where T_RESULT = 'Negative';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Before:
+
+
+select T_RESULT
+   ...> from tests
+   ...> ;
+Positive
+Negative
+Positive
+Negative
+Positive
+Negative
+Negative
+Positive
+Positive
+Negative
+Positive
+Positive
+Negative
+Positive
+Positive
+Negative
+Negative
+Positive
+Positive
+Negative
+Negative
+Negative
+Negative
+Positive
+Negative
+Positive
+Negative
+Negative
+Positive
+Negative
+Negative
+Negative
+Positive
+Negative
+Positive
+Positive
+Negative
+Negative
+Positive
+Positive
+Negative
+Positive
+Positive
+Positive
+Positive
+Positive
+Negative
+Negative
+Positive
+Negative
+
+
+AFTER:
+
+sqlite> select T_RESULT
+   ...> from tests;
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
+Positive
